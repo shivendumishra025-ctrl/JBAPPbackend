@@ -5,6 +5,7 @@ const User = require("../models/User");
 // ➤ Create User
 router.post("/", async (req, res) => {
  try {
+  console.log(req.body);
     const { fullName, email, phone, password } = req.body;
 
     const existingUser = await User.findOne({ email });
@@ -75,4 +76,5 @@ router.delete("/:id", async (req, res) => {
 });
 
 module.exports = router;
+
 
