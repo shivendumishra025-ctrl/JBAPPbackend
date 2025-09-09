@@ -4,16 +4,26 @@ const User = require("../models/User");
 
 // ➤ Create User
 router.post("/", async (req, res) => {
-  try {
-    console.log(req);
-    
-    const user = new User(req.body);
-    // console.log(user);
-    
-    await user.save();
-    res.status(201).json(user);
+ try {
+    const { fullName, email, phone, password } = req.body;
+
+    const existingUser = await User.findOne({ email });
+    if (existingUser) return res.status(400).json({ message: "Email already registered" });
+
+    const salt = await bcrypt.genSalt(10);
+    const passwordHash = await bcrypt.hash(password, salt);
+
+    const newUser = new User({
+      fullName,
+      email,
+      phone,
+      passwordHash,
+    });
+
+    await newUser.save();
+    res.status(201).json({ message: "User registered successfully" });
   } catch (err) {
-    res.status(400).json({ error: err.message });
+    res.status(500).json({ message: "Server error", error: err.message });
   }
 });
 
@@ -65,3 +75,4 @@ router.delete("/:id", async (req, res) => {
 });
 
 module.exports = router;
+
