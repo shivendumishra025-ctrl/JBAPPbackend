@@ -24,6 +24,7 @@ router.post("/", async (req, res) => {
     await newUser.save();
     res.status(201).json({ message: "User registered successfully" });
   } catch (err) {
+   console.log(err)
     res.status(500).json({ message: "Server error", error: err.message });
   }
 });
@@ -76,5 +77,6 @@ router.delete("/:id", async (req, res) => {
 });
 
 module.exports = router;
+
 
 
