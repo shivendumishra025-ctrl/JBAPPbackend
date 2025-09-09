@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const User = require("../models/User");
-
+const bcrypt = require("bcryptjs");
 // ➤ Create User
 router.post("/", async (req, res) => {
  try {
@@ -77,6 +77,7 @@ router.delete("/:id", async (req, res) => {
 });
 
 module.exports = router;
+
 
 
 
