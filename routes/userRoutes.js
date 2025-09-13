@@ -114,6 +114,88 @@ router.post("/login", async (req, res) => {
   }
 });
 
+
+router.post("/api/address/:userId", async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const { name, phone, houseNo, street, city, state, pincode } = req.body;
+
+    const newAddress = {
+      street: `${houseNo}, ${street}`,
+      city,
+      state,
+      zip: pincode,
+      country: "India", // default or pass dynamically
+    };
+
+    const user = await User.findById(userId);
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    user.addresses.push(newAddress);
+    await user.save();
+
+    res.json({ message: "Address added successfully", addresses: user.addresses });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+/**
+ * ✏️ Update an existing address
+ * @route PUT /api/address/:userId/:addressId
+ */
+router.put("/api/address/:userId/:addressId", async (req, res) => {
+  try {
+    const { userId, addressId } = req.params;
+    const { street, city, state, zip, country } = req.body;
+
+    const user = await User.findById(userId);
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    const address = user.addresses.id(addressId);
+    if (!address) return res.status(404).json({ message: "Address not found" });
+
+    address.street = street || address.street;
+    address.city = city || address.city;
+    address.state = state || address.state;
+    address.zip = zip || address.zip;
+    address.country = country || address.country;
+
+    await user.save();
+
+    res.json({ message: "Address updated successfully", addresses: user.addresses });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+/**
+ * 🗑 Delete address
+ * @route DELETE /api/address/:userId/:addressId
+ */
+router.delete("/api/address/:userId/:addressId", async (req, res) => {
+  try {
+    const { userId, addressId } = req.params;
+
+    const user = await User.findById(userId);
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    const address = user.addresses.id(addressId);
+    if (!address) return res.status(404).json({ message: "Address not found" });
+
+    address.deleteOne();
+    await user.save();
+
+    res.json({ message: "Address deleted", addresses: user.addresses });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+
 module.exports = router;
 
 
