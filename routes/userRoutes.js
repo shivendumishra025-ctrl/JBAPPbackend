@@ -195,6 +195,23 @@ router.delete("/api/address/:userId/:addressId", async (req, res) => {
   }
 });
 
+// Fetch data
+// 📌 Get all addresses of a user
+router.get("/address/:userId", async (req, res) => {
+  try {
+    const { userId } = req.params;
+
+    // Find user by ID
+    const user = await User.findById(userId);
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    // Return saved addresses
+    res.json({ addresses: user.addresses });
+  } catch (error) {
+    console.error("❌ Error fetching addresses:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+});
 
 module.exports = router;
 
