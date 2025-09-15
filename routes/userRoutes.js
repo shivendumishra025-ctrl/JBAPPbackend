@@ -200,7 +200,8 @@ router.delete("/api/address/:userId/:addressId", async (req, res) => {
 router.get("/address/:userId", async (req, res) => {
   try {
     const { userId } = req.params;
-
+    console.log("user id", userId);
+    
     // Find user by ID
     const user = await User.findById(userId);
     if (!user) return res.status(404).json({ message: "User not found" });
@@ -208,7 +209,7 @@ router.get("/address/:userId", async (req, res) => {
     // Return saved addresses
     res.json({ addresses: user.addresses });
   } catch (error) {
-    console.error("❌ Error fetching addresses:", error);
+    console.log("❌ Error fetching addresses:", error);
     res.status(500).json({ message: "Server error" });
   }
 });
