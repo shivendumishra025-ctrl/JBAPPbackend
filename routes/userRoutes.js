@@ -121,7 +121,10 @@ router.post("/api/address/:userId", async (req, res) => {
     const { name, phone, houseNo, street, city, state, pincode } = req.body;
 
     const newAddress = {
-      street: `${houseNo}, ${street}`,
+      name,
+      phone,
+      houseNo,
+      street,
       city,
       state,
       zip: pincode,
@@ -148,7 +151,7 @@ router.post("/api/address/:userId", async (req, res) => {
 router.put("/api/address/:userId/:addressId", async (req, res) => {
   try {
     const { userId, addressId } = req.params;
-    const { street, city, state, zip, country } = req.body;
+    const {  name , phone, houseNo,street, city, state, zip, country } = req.body;
 
     const user = await User.findById(userId);
     if (!user) return res.status(404).json({ message: "User not found" });
@@ -156,6 +159,9 @@ router.put("/api/address/:userId/:addressId", async (req, res) => {
     const address = user.addresses.id(addressId);
     if (!address) return res.status(404).json({ message: "Address not found" });
 
+    address.name = name || address.name;
+    address.phone = phone || address.phone;
+    address.houseNo = houseNo || address.houseNo;
     address.street = street || address.street;
     address.city = city || address.city;
     address.state = state || address.state;
