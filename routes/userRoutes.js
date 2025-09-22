@@ -118,7 +118,7 @@ router.post("/login", async (req, res) => {
 router.post("/api/address/:userId", async (req, res) => {
   try {
     const { userId } = req.params;
-    const { name, phone, houseNo, street, city, state, pincode } = req.body;
+    const { name, phone, houseNo, street, city, state, zip } = req.body;
 
     const newAddress = {
       name,
@@ -127,7 +127,7 @@ router.post("/api/address/:userId", async (req, res) => {
       street,
       city,
       state,
-      zip: pincode,
+      zip,
       country: "India", // default or pass dynamically
     };
 
