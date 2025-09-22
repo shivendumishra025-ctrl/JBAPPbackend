@@ -151,6 +151,7 @@ router.post("/api/address/:userId", async (req, res) => {
 router.put("/api/address/:userId/:addressId", async (req, res) => {
   try {
     const { userId, addressId } = req.params;
+    console.log(req.body);
     const {  name , phone, houseNo,street, city, state, zip, country } = req.body;
 
     const user = await User.findById(userId);
